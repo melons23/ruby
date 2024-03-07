@@ -42,7 +42,7 @@ def calendar_body(start_date, end_date)
   puts "\n"
 end
 
-if put_month.between?(MINMONTH, MAXMONTH) then
+if put_month.between?(MINMONTH, MAXMONTH)
 
   dateset = Date.new(2024, put_month, 1)
   calendar_header(dateset)
@@ -50,7 +50,6 @@ if put_month.between?(MINMONTH, MAXMONTH) then
   star_date = Date.new(dateset.year, dateset.month, 1)
   end_date = Date.new(dateset.year, dateset.month, -1)
   calendar_body(star_date, end_date)
-  
 else
   puts "#{put_month} is neither a month number (1..12) nor a name"
 end
