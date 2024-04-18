@@ -3,6 +3,7 @@ require_relative 'suica'
 
 class VendingMachine
   attr_reader :suica
+  private attr_writer :amount
 
   def initialize(suica)
     @stock = []

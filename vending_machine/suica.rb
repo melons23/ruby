@@ -1,5 +1,5 @@
 class Suica
-  attr_writer :balance
+  private attr_writer :balance
 
   # 預かり金
   DEPOSIT = 500
@@ -19,6 +19,15 @@ class Suica
     end
   end
 
+  # 残高取得
+  def now_balance
+    @balance
+  end
+
+  def puts_balance
+    "Suica残高 : #{@balance}円"
+  end
+
   # 残高を増やす
   def add_balance(purchased_money)
     @balance += purchased_money
@@ -27,14 +36,5 @@ class Suica
   # 残高を減らす
   def del_balance(purchased_money)
     @balance -= purchased_money
-  end
-
-  # 残高取得
-  def now_balance
-    @balance
-  end
-
-  def puts_balance
-    "Suica残高 : #{@balance}円"
   end
 end
