@@ -6,61 +6,66 @@ class VendingMachine
   private attr_writer :amount
 
   def initialize
-    @stock = []
-    @amount = 0
-  end
-
-  # 初期在庫補充
-  def default_juice(juice)
-    @stock << juice
+    @juice_stock = [
+      {juice: Juice.new('ペプシ', 150), count: 5},
+      {juice: Juice.new('モンスター', 230), count: 5},
+      {juice: Juice.new('いろはす', 120), count: 5}
+    ]
+    @total_sales_money = 0
   end
 
   # 在庫を増やす
-  def add_stock(juice, increase_by)
-    find_juice(juice).stock += increase_by if find_juice(juice).name == juice
+  def add_stock(juice_name, increase_by) 
+    juice = find_juice(juice_name)
+    juice[:count] += increase_by if juice
   end
 
   # 在庫を減らす
-  def remove_stock(juice, decrease_by)
-    find_juice(juice).stock -= decrease_by if find_juice(juice).name == juice
+  def remove_stock(juice_name, decrease_by)
+    juice = find_juice(juice_name)
+    juice[:count] -= decrease_by if juice
+  end
+
+  # 売上金額を増やす
+  def add_amount(purchased_money)
+    @total_sales_money += purchased_money
   end
 
   # 在庫取得
-  def stock(juice)
-    "#{find_juice(juice).name}の在庫は#{find_juice(juice).stock}本です。"
-  end
-
-  # 売上金額取得
-  def add_amount(purchased_money)
-    @amount += purchased_money
+  def stock(juice_name)
+    juice = find_juice(juice_name)
+    "#{juice_name}の在庫は#{juice[:count]}本です。"
   end
 
   # 購入
-  def buy(juice, suica)
-    purchase_juice = find_juice(juice)
-    raise '在庫がありません' if purchase_juice.stock.nil?
-    raise '金額が不足しています' if purchase_juice.money > suica.now_balance
+  def buy(juice_name, suica)
+    juice = find_juice(juice_name)
+    raise '在庫がありません' if juice[:count].nil?
+    raise 'Suicaの残高が不足しています' if juice[:juice].money > suica.now_balance
 
-    get_juice(purchase_juice, suica)
+    # 購入後の処理
+    # ①在庫を減らす
+    remove_stock(juice[:juice].name, 1)
+    # ②売上金額を増やす
+    add_amount(juice[:juice].money)
+    # ③Suicaの残高を減らす
+    suica.del_balance(juice[:juice].money)
 
   end
 
-  def get_juice(purchase_juice, suica)
-    remove_stock(purchase_juice.name, 1)
-    add_amount(purchase_juice.money)
-    suica.del_balance(purchase_juice.money)
+  # ドリンクリスト取得
+  def juice_list
+    @juice_stock.map { |juice| "・#{juice[:juice].name}" }
   end
 
-  # ドリンクリスト
-  def drink_list
-    @stock.map { |juice| "・#{juice.name}" }
-  end
-
+  #　現在の売上金額取得
   def now_amount
-    "売上金額 : #{@amount}円"
+    "売上金額 : #{@total_sales_money}円"
   end
 
+  # 商品検索
   def find_juice(juice_name)
-    @stock.find{ |item| item.name == juice_name }
+    @juice_stock.find{ |juice| juice[:juice].name == juice_name }
   end
+  
 end

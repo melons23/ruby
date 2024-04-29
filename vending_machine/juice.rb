@@ -1,10 +1,10 @@
 class Juice
-  attr_reader :name, :money, :stock
+  attr_reader :name, :money
   attr_writer :stock
-  def initialize(name, money, stock)
+  
+  def initialize(name, money)
     @name = name
     @money = money
-    @stock = stock
   end
 
 end
