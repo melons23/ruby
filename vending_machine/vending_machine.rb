@@ -15,7 +15,7 @@ class VendingMachine
   end
 
   # 在庫を増やす
-  def add_stock(juice_name, increase_by) 
+  def add_stock(juice_name, increase_by)
     juice = find_juice(juice_name)
     juice[:count] += increase_by if juice
   end
@@ -58,7 +58,7 @@ class VendingMachine
     @juice_stock.map { |juice| "・#{juice[:juice].name}" }
   end
 
-  #　現在の売上金額取得
+  # 現在の売上金額取得
   def now_amount
     "売上金額 : #{@total_sales_money}円"
   end
@@ -67,5 +67,4 @@ class VendingMachine
   def find_juice(juice_name)
     @juice_stock.find{ |juice| juice[:juice].name == juice_name }
   end
-  
 end
